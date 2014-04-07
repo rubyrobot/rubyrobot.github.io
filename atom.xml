@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[rubyrobot]]></title>
   <link href="http://rubyrobot.github.io/atom.xml" rel="self"/>
   <link href="http://rubyrobot.github.io/"/>
-  <updated>2014-04-08T00:02:33+02:00</updated>
+  <updated>2014-04-08T00:56:53+02:00</updated>
   <id>http://rubyrobot.github.io/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[rubyrobot]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Secure Rails Deployment: Best Practices]]></title>
+    <link href="http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-best-practices/"/>
+    <updated>2014-04-08T00:23:23+02:00</updated>
+    <id>http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-best-practices</id>
+    <content type="html"><![CDATA[<figure class='code'><figcaption><span>Discover if a number is prime linenos:false</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Fixnum</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">prime?</span>
+</span><span class='line'>    <span class="p">(</span><span class="s1">&#39;1&#39;</span> <span class="o">*</span> <span class="nb">self</span><span class="p">)</span> <span class="o">!~</span> <span class="sr">/^1?$|^(11+?)\1+$/</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
 </feed>
