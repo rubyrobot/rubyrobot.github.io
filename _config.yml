@@ -3,10 +3,10 @@
 # ----------------------- #
 
 url: http://rubyrobot.github.io
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
-simple_search: https://www.google.com/search
+title: rubyrobot
+subtitle: On Ruby on Rails
+author: rubyrobot
+# simple_search: https://www.google.com/search
 description:
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
@@ -90,8 +90,8 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
-disqus_show_comment_count: false
+disqus_short_name: irubyrobot
+disqus_show_comment_count: true
 
 # Google Analytics
 google_analytics_tracking_id:
