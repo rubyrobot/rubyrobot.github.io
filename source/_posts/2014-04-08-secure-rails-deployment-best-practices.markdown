@@ -9,7 +9,7 @@ categories:
 ``` ruby Discover if a number is prime linenos:false
 class Fixnum
   def prime?
-    "hello world
+    "hello world"
   end
 end
 ```
