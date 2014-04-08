@@ -9,7 +9,7 @@ categories:
 ``` ruby Discover if a number is prime linenos:false
 class Fixnum
   def prime?
-    ('1' * self) !~ /^1?$|^(11+?)\1+$/
+    "hello world
   end
 end
 ```
