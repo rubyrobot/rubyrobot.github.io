@@ -4,7 +4,7 @@
   <title><![CDATA[rubyrobot]]></title>
   <link href="http://rubyrobot.github.io/atom.xml" rel="self"/>
   <link href="http://rubyrobot.github.io/"/>
-  <updated>2014-04-08T18:06:33+02:00</updated>
+  <updated>2014-04-08T18:12:29+02:00</updated>
   <id>http://rubyrobot.github.io/</id>
   <author>
     <name><![CDATA[rubyrobot]]></name>
@@ -25,9 +25,9 @@
 <span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Fixnum</span>
 </span><span class='line'>  <span class="k">def</span> <span class="nf">prime?</span>
-</span><span class='line'>    <span class="s2">&quot;hello world</span>
-</span><span class='line'><span class="s2">  end</span>
-</span><span class='line'><span class="s2">end</span>
+</span><span class='line'>    <span class="s2">&quot;hello world&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 ]]></content>
