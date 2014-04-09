@@ -77,19 +77,19 @@ production:
 
 ## Restrict Database Access on Application Level
 
-This is a short tip but it can't be stressed enough.
+This is a general and short tip, but it can't be stressed enough.
 
-If you don't keep seperate database accounts for each application and restrict access to their respective database, just one weak PHP script on your server vulnerable to SQL injection can compromise all other applications.
+If you don't keep separate database accounts for each application and restrict access to their respective database, just one weak PHP script on your server vulnerable to SQL injection can compromise all other applications.
 
 ## Best Practices For SSH Authentication
 
-I like to use one single SSH key to access all user accounts on all servers from all my computers. Since the key challenge mechanism never exposes your private key, it's not less secure than having separate keys per account. But it's really up to you how much granularity in access control you want.
+Personally, I like to use a single SSH key to access all user accounts on all servers from all my computers. Since the key challenge mechanism never exposes the private key, it's not less secure than having separate keys per account. But it's really up to you how much granularity in access control you want.
 
 Just make sure to keep a backup of your private key and that it is encrypted with a strong password:
 
 ``` bash
 $ cat .ssh/id_rsa
-# Should output:
+# Should output something like:
 -----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 [...]
@@ -102,7 +102,7 @@ Encryption doesn't mean you have to enter the password each time you use the key
 $ ssh-add -K
 ```
 
-Place your public key in alice's home directory on the production server (/home/alice/.ssh/authorized_keys) and deploy in her name:
+Place your public key in alice's home directory on the production server (/home/alice/.ssh/authorized_keys) and deploy in her name. This means all application files will be owned by alice, and cronjobs through the *whenever* gem will be run by user alice.
 
 ``` ruby config/deploy.rb
 set :user, "alice"
@@ -120,3 +120,5 @@ Finally, why not disable password authentication via SSH on your server altogeth
 ChallengeResponseAuthentication no
 PasswordAuthentication no
 ```
+
+Happy deploying!
