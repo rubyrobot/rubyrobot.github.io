@@ -116,13 +116,15 @@
 </ul>
 
 
-<h2>Keep Your Database Passwords Out of Version Control</h2>
+<h2>Keeping Your Database Passwords Out of Version Control</h2>
 
 <p>I see people promoting the idea to keep the database password in an environment variable. It&rsquo;s easy and tempting, but have you ever seen how Passenger prints out your environmental variables if a startup error occurs?</p>
 
 <p>The Linux environment was never intended to hold sensitive information and you can&rsquo;t rely on it not being exposed by server processes.</p>
 
-<p>By any means &ndash; keeping secrets is a problem that Linux file permissions are designed for, so why not put the secrets in a file only readable by the application. You can even put a serialized Ruby hash with SMTP credentials in that file.</p>
+<h3>Can You Keep a Secret?</h3>
+
+<p>By any means &ndash; keeping a secret is a problem that Linux file permissions are designed for, so why not put the secrets in a file only readable by the application. You can even put a serialized Ruby hash with SMTP credentials in that file.</p>
 
 <p>On your Linux server, create a user named after your application and a file to hold the secrets:</p>
 
