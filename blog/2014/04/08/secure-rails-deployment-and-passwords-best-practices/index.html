@@ -49,6 +49,7 @@
 
 <body   >
   <header role="banner"><hgroup>
+  <a href="/"><img src="/images/rubyrobot-girl.png" style="float: left; border:0" /></a>
   <h1><a href="/">rubyrobot</a></h1>
   
     <h2>On Ruby, on Rails</h2>
@@ -200,13 +201,13 @@
 
 <h2>Restrict Database Access on Application Level</h2>
 
-<p>This is a short tip but it can&rsquo;t be stressed enough.</p>
+<p>This is a general and short tip, but it can&rsquo;t be stressed enough.</p>
 
-<p>If you don&rsquo;t keep seperate database accounts for each application and restrict access to their respective database, just one weak PHP script on your server vulnerable to SQL injection can compromise all other applications.</p>
+<p>If you don&rsquo;t keep separate database accounts for each application and restrict access to their respective database, just one weak PHP script on your server vulnerable to SQL injection can compromise all other applications.</p>
 
 <h2>Best Practices For SSH Authentication</h2>
 
-<p>I like to use one single SSH key to access all user accounts on all servers from all my computers. Since the key challenge mechanism never exposes your private key, it&rsquo;s not less secure than having separate keys per account. But it&rsquo;s really up to you how much granularity in access control you want.</p>
+<p>Personally, I like to use a single SSH key to access all user accounts on all servers from all my computers. Since the key challenge mechanism never exposes the private key, it&rsquo;s not less secure than having separate keys per account. But it&rsquo;s really up to you how much granularity in access control you want.</p>
 
 <p>Just make sure to keep a backup of your private key and that it is encrypted with a strong password:</p>
 
@@ -216,7 +217,7 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>cat .ssh/id_rsa
-</span><span class='line'><span class="c"># Should output:</span>
+</span><span class='line'><span class="c"># Should output something like:</span>
 </span><span class='line'>-----BEGIN RSA PRIVATE KEY-----
 </span><span class='line'>Proc-Type: 4,ENCRYPTED
 </span><span class='line'><span class="o">[</span>...<span class="o">]</span>
@@ -232,7 +233,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Place your public key in alice&rsquo;s home directory on the production server (/home/alice/.ssh/authorized_keys) and deploy in her name:</p>
+<p>Place your public key in alice&rsquo;s home directory on the production server (/home/alice/.ssh/authorized_keys) and deploy in her name. This means all application files will be owned by alice, and cronjobs through the <em>whenever</em> gem will be run by user alice.</p>
 
 <figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:user</span><span class="p">,</span> <span class="s2">&quot;alice&quot;</span>
@@ -256,6 +257,8 @@
 </span><span class='line'>PasswordAuthentication no
 </span></code></pre></td></tr></table></div></figure>
 
+
+<p>Happy deploying!</p>
 </div>
 
 
