@@ -4,7 +4,7 @@
 
 url: http://rubyrobot.github.io
 title: rubyrobot
-subtitle: On Ruby on Rails
+subtitle: On Ruby, on Rails
 author: rubyrobot
 # simple_search: https://www.google.com/search
 description:
@@ -94,7 +94,7 @@ disqus_short_name: rubyrobot
 disqus_show_comment_count: true
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: "UA-1162770-12"
 
 # Facebook Like
 facebook_like: false
