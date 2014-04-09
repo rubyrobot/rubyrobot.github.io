@@ -41,10 +41,10 @@ Inside that file, provide your database password and any other secrets you may h
 ---
 DB_PASS: secret1234
 SMTP:
-  address: my.mailserver.com
-  port: 587
-  authentication: cram_md5
-  password: secret4321
+  :address: my.mailserver.com
+  :port: 587
+  :authentication: cram_md5
+  :password: secret4321
   [...]
 ```
 
