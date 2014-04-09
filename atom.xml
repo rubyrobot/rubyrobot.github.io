@@ -4,7 +4,7 @@
   <title><![CDATA[rubyrobot]]></title>
   <link href="http://rubyrobot.github.io/atom.xml" rel="self"/>
   <link href="http://rubyrobot.github.io/"/>
-  <updated>2014-04-08T18:16:20+02:00</updated>
+  <updated>2014-04-09T14:11:44+02:00</updated>
   <id>http://rubyrobot.github.io/</id>
   <author>
     <name><![CDATA[rubyrobot]]></name>
@@ -14,20 +14,163 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Secure Rails Deployment: Best Practices]]></title>
-    <link href="http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-best-practices/"/>
+    <title type="html"><![CDATA[Secure Rails Deployment and Passwords: Best Practices]]></title>
+    <link href="http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices/"/>
     <updated>2014-04-08T00:23:23+02:00</updated>
-    <id>http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-best-practices</id>
-    <content type="html"><![CDATA[<figure class='code'><figcaption><span>Discover if a number is prime linenos:false</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    <id>http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices</id>
+    <content type="html"><![CDATA[<p><em>This article explains how to setup and deploy a Ruby on Rails application on your Linux servers with reasonable security measures and without making deployment any less convenient.</em></p>
+
+<p>I assume you are using Apache and Phusion Passenger. If you use another combination, you may have to adapt a little.</p>
+
+<p>In short, you want to:</p>
+
+<ul>
+<li>Keep your database passwords and application&rsquo;s secrets out of version control and make them readable to the application only.</li>
+<li>Have a different database user for each application with access to it&rsquo;s respective database only.</li>
+<li>Access your remote servers via SSH without typing passwords or compromising your private key.</li>
+</ul>
+
+
+<h2>Keep Your Database Passwords Out of Version Control</h2>
+
+<p>I see people promoting the idea to keep the database password in an environment variable. It&rsquo;s easy and tempting, but have you ever seen how Passenger prints out your environmental variables if a startup error occurs?</p>
+
+<p>The Linux environment was never intended to hold sensitive information and you can&rsquo;t rely on it not being exposed by server processes.</p>
+
+<p>By any means &ndash; keeping secrets is a problem that Linux file permissions are designed for, so why not put the secrets in a file only readable by the application. You can even put a serialized Ruby hash with SMTP credentials in that file.</p>
+
+<p>On your Linux server, create a user named after your application and a file to hold the secrets:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Fixnum</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">prime?</span>
-</span><span class='line'>    <span class="s2">&quot;hello world&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo useradd alice
+</span><span class='line'><span class="nv">$ </span>sudo mkdir /home/alice
+</span><span class='line'><span class="nv">$ </span>sudo touch /home/alice/.rails_secrets.yml
+</span><span class='line'><span class="nv">$ </span>sudo chown -R alice:alice /home/alice
+</span><span class='line'><span class="nv">$ </span>sudo chmod 400 /home/alice/.rails_secrets.yml
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Inside that file, provide your database password and any other secrets you may have:</p>
+
+<figure class='code'><figcaption><span>/home/alice/.rails_secrets.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="l-Scalar-Plain">DB_PASS</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">secret1234</span>
+</span><span class='line'><span class="l-Scalar-Plain">SMTP</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">address</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my.mailserver.com</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">587</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">authentication</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">cram_md5</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">secret4321</span>
+</span><span class='line'>  <span class="p-Indicator">[</span><span class="nv">...</span><span class="p-Indicator">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now add this you your application.rb:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">secrets_file</span> <span class="o">=</span> <span class="s2">&quot;/home/alice/.rails_secrets.yml&quot;</span>
+</span><span class='line'><span class="no">SECRET</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">exists?</span><span class="p">(</span><span class="n">secrets_file</span><span class="p">)</span> <span class="p">?</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">secrets_file</span><span class="p">)</span> <span class="p">:</span> <span class="p">{}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally tell Passenger to run as your application&rsquo;s user. This needs <em>PassengerUserSwitching</em> enabled (default) and your Apache to spawn from a root process (default i.e. on Ubuntu). In your Apache virtual host container:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="nb">PassengerUser</span> alice
+</span><span class='line'><span class="nb">PassengerGroup</span> alice
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&rsquo;s it. Now you can access your secrets anywhere in your application, i.e. in your database.yml:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">production:</span>
+</span><span class='line'><span class="x">  adapter: mysql2</span>
+</span><span class='line'><span class="x">  encoding: utf8</span>
+</span><span class='line'><span class="x">  reconnect: true</span>
+</span><span class='line'><span class="x">  database: alice_production</span>
+</span><span class='line'><span class="x">  username: alice</span>
+</span><span class='line'><span class="x">  password: </span><span class="cp">&lt;%=</span> <span class="no">SECRET</span><span class="o">[</span><span class="s2">&quot;DB_PASS&quot;</span><span class="o">]</span> <span class="cp">%&gt;</span><span class="x"></span>
+</span><span class='line'><span class="x">  socket: /var/run/mysqld/mysqld.sock</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Restrict Database Access on Application Level</h2>
+
+<p>This is a short tip but it can&rsquo;t be stressed enough.</p>
+
+<p>If you don&rsquo;t keep seperate database accounts for each application and restrict access to their respective database, just one weak PHP script on your server vulnerable to SQL injection can compromise all other applications.</p>
+
+<h2>Best Practices For SSH Authentication</h2>
+
+<p>I like to use one single SSH key to access all user accounts on all servers from all my computers. Since the key challenge mechanism never exposes your private key, it&rsquo;s not less secure than having separate keys per account. But it&rsquo;s really up to you how much granularity in access control you want.</p>
+
+<p>Just make sure to keep a backup of your private key and that it is encrypted with a strong password:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>cat .ssh/id_rsa
+</span><span class='line'><span class="c"># Should output:</span>
+</span><span class='line'>-----BEGIN RSA PRIVATE KEY-----
+</span><span class='line'>Proc-Type: 4,ENCRYPTED
+</span><span class='line'><span class="o">[</span>...<span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Encryption doesn&rsquo;t mean you have to enter the password each time you use the key. Use ssh agent to keep it in memory or add it to your system&rsquo;s key chain:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># The -K switch works only on Mac OS X and will add the password to your system&#39;s key chain</span>
+</span><span class='line'><span class="nv">$ </span>ssh-add -K
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Place your public key in alice&rsquo;s home directory on the production server (/home/alice/.ssh/authorized_keys) and deploy in her name:
+ß</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:user</span><span class="p">,</span> <span class="s2">&quot;alice&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Also add the following line to authenticate with Git from your development machine, so you won&rsquo;t have to copy your private key on the production server:</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">ssh_options</span><span class="o">[</span><span class="ss">:forward_agent</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally, why not disable password authentication via SSH on your server altogether? On your Linux server:</p>
+
+<figure class='code'><figcaption><span>/etc/ssh/sshd_config</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># Make sure the following lines exist:</span>
+</span><span class='line'>ChallengeResponseAuthentication no
+</span><span class='line'>PasswordAuthentication no
 </span></code></pre></td></tr></table></div></figure>
 
 ]]></content>

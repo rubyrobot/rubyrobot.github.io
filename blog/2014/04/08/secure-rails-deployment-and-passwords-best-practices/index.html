@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>rubyrobot</title>
+  <title>Secure Rails Deployment and Passwords: Best Practices - rubyrobot</title>
   <meta name="author" content="rubyrobot">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyrobot.github.io">
+  <link rel="canonical" href="http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices">
   <link href="/favicon.ico" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/rubyrobot.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -57,15 +57,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices/">Secure Rails Deployment and Passwords: Best Practices</a></h1>
+      <h1 class="entry-title">Secure Rails Deployment and Passwords: Best Practices</h1>
     
     
       <p class="meta">
@@ -83,15 +80,15 @@
 
 <time datetime="2014-04-08T00:23:23+02:00" pubdate data-updated="true">Apr 8<span>th</span>, 2014</time>
         
-           | <a href="/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices/#disqus_thread"
-             data-disqus-identifier="http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices/">Comments</a>
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://rubyrobot.github.io">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><em>This article explains how to setup and deploy a Ruby on Rails application on your Linux servers with reasonable security measures and without making deployment any less convenient.</em></p>
+<div class="entry-content"><p><em>This article explains how to setup and deploy a Ruby on Rails application on your Linux servers with reasonable security measures and without making deployment any less convenient.</em></p>
 
 <p>I assume you are using Apache and Phusion Passenger. If you use another combination, you may have to adapt a little.</p>
 
@@ -247,18 +244,57 @@
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">rubyrobot</span></span>
+
+      
+
+
+
+
+
+
+
+
   
 
 
-    </article>
+<time datetime="2014-04-08T00:23:23+02:00" pubdate data-updated="true">Apr 8<span>th</span>, 2014</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices/" data-via="" data-counturl="http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices/" >Tweet</a>
+  
+  
+  
 </div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
@@ -279,6 +315,7 @@
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -293,7 +330,10 @@
       var disqus_shortname = 'rubyrobot';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices/';
+        var disqus_url = 'http://rubyrobot.github.io/blog/2014/04/08/secure-rails-deployment-and-passwords-best-practices/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
